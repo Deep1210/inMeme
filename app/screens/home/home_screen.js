@@ -18,7 +18,8 @@ import {
     Image,
     Animated,
     PanResponder,
-    TouchableOpacity
+    TouchableOpacity,
+    Share
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Download} from '../../utils';
@@ -99,6 +100,32 @@ export default class HomeScreen extends Component {
         Download.start(image_url)
     }
 
+    
+    onShare = async () => {
+        try {
+            const result = await Share.share({
+                message:
+                    'Meme Planet' +
+                    '\n'+'Let me recommend you this application\n\n'
+                    +"https://play.google.com/store/apps/details?id=com.inmeme",
+            });
+
+            if (result.action === Share.sharedAction) {
+
+                if (result.activityType) {
+
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+    };
+
 
     renderArticles = () => {
 
@@ -170,7 +197,7 @@ export default class HomeScreen extends Component {
                 {this.state.show ? <View style={{ backgroundColor: 'white', flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
                     <Icon size={25} name={'favorite-border'} />
                     <TouchableOpacity onPress={()=>this.downloadImage()}><Icon size={25} name={'file-download'} /></TouchableOpacity>
-                   <TouchableOpacity ><Icon size={25} name={'share'} /></TouchableOpacity>
+                   <TouchableOpacity  onPress={()=>this.onShare()}><Icon size={25} name={'share'} /></TouchableOpacity>
                 </View> : (null)}
             </View>
         )
