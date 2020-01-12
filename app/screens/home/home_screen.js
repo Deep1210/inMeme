@@ -24,6 +24,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Download} from '../../utils';
 import DeviceInfo from 'react-native-device-info';
+import { ThemeColors } from 'react-navigation';
 
 
 const SCREEN_HEIGHT = Dimensions.get("window").height
@@ -96,7 +97,7 @@ export default class HomeScreen extends Component {
 
     getMemes() {
         //let id= DeviceInfo.getUniqueID();
-        console.log("id.........: "+id)
+       // console.log("id.........: "+id)
         fetch('http://207.246.125.54/api/meme?deviceId=xZczvcxzvzxcvzxcv', {
             method: 'GET'
         }).then(response=>{
@@ -226,9 +227,17 @@ export default class HomeScreen extends Component {
                     {this.renderArticles()}
                 </View>
                 {this.state.show ? <View style={{ backgroundColor: 'white', flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                    <Icon size={25} name={'favorite-border'} />
-                    <TouchableOpacity onPress={() => this.downloadImage()}><Icon size={25} name={'file-download'} /></TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.onShare()}><Icon size={25} name={'share'} /></TouchableOpacity>
+                <TouchableOpacity onPress={() => this.setState({
+                    ["isLike"+this.state.currentIndex]:!this.state["isLike"+this.state.currentIndex]
+                })} style={{flexDirection:'row'}}>
+                    <Icon size={25} name={'favorite-border'} 
+                    style={{color:this.state["isLike"+this.state.currentIndex]?'red':'black'}}/>
+                    <Text style={{fontSize:16}}>
+                        {this.state.memeData[this.state.currentIndex]?
+                    this.state.memeData[this.state.currentIndex].vote:null}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.downloadImage()}><Icon size={25} name={'file-download'} /></TouchableOpacity>
+                <TouchableOpacity onPress={() => this.onShare()}><Icon size={25} name={'share'} /></TouchableOpacity>
                 </View> : (null)}
             </View>
         )
