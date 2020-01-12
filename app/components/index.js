@@ -1,4 +1,4 @@
-import DrawerMenu from './Drawer';
+import DrawerMenu from './Drawer/SideMenu';
 
 export {
     DrawerMenu
