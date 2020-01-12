@@ -26,6 +26,12 @@ import {Download} from '../../utils';
 import DeviceInfo from 'react-native-device-info';
 import { ThemeColors } from 'react-navigation';
 import Loader from "../../components/Loader";
+import {
+    AdMobBanner,
+    AdMobInterstitial,
+    PublisherBanner,
+    AdMobRewarded,
+  } from 'react-native-admob'
 
 
 const SCREEN_HEIGHT = Dimensions.get("window").height
@@ -213,8 +219,19 @@ export default class HomeScreen extends Component {
     }
 
     render() {
+       // AdMobInterstitial.setAdUnitID('ca-app-pub-4520361263876285/7772038802');
+        //AdMobInterstitial.setTestDevices([AdMobInterstitial.simulatorId]);
         return (
             <View style={{ flex: 1 }}>
+                
+                {this.state.currentIndex%2===0?
+                <AdMobBanner
+                    adSize="fullBanner"
+                    adUnitID='ca-app-pub-4520361263876285/7772038802'
+                    testDevices={[AdMobBanner.simulatorId]}
+                    onAdFailedToLoad={error => console.error(error)}
+                />
+                :null}
                  <Loader loading={this.state.loading} />
                 {this.state.show ?
                     <View style={{ backgroundColor: 'white', flex: 1, alignItems: 'center',flexDirection:'row' }}>
