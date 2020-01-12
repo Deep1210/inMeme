@@ -55,13 +55,16 @@ export default class HomeScreen extends Component {
                 },
             ]),
             onPanResponderRelease: (evt, gestureState) => {
+                if(-gestureState.dy==0){
+                    this.setState({show:!this.state.show})
+                }
                 if (-gestureState.dy > 50 && -gestureState.vy > 0.7) {
                     Animated.timing(this.state.pan, {
                         toValue: ({ x: 0, y: -SCREEN_HEIGHT }),
                         duration: 400
                     }).start(() => {
                         console.log('pan', this.state.pan)
-                        this.setState({ currentIndex: this.state.currentIndex + 1, pan: new Animated.ValueXY() })
+                        this.setState({ currentIndex: this.state.currentIndex + 1, show:false,pan: new Animated.ValueXY() })
                     })
                 } else {
                     Animated.spring(this.state.pan, {
@@ -143,10 +146,6 @@ export default class HomeScreen extends Component {
         }).reverse()
     }
 
-    showHide(event) {
-        console.log('event',event)
-        this.setState({ show: !this.state.show })
-    }
 
     openDrawer() {
         console.log('open drawer')
@@ -165,7 +164,7 @@ export default class HomeScreen extends Component {
                     :
                     (null)
                 }
-                <View style={{ flex: 12 }} onTouchEndCapture={(event) => this.showHide(event)}>
+                <View style={{ flex: 12 }}>
                     {this.renderArticles()}
                 </View>
                 {this.state.show ? <View style={{ backgroundColor: 'white', flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
