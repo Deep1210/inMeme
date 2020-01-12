@@ -11,7 +11,7 @@ class SideMenu extends Component {
         const navigateAction = NavigationActions.navigate({
             routeName: route,
         });
-        this.props.navigation.navigate(route);
+        this.props.navigation.navigate('Home')
     };
 
     constructor(props){
@@ -50,7 +50,13 @@ class SideMenu extends Component {
         })
     }
 
-  
+    navigateToScreen = (route) => () => {
+
+        const navigateAction = NavigationActions.navigate({
+            routeName: route,
+        });
+        this.props.navigation.navigate(route);
+    };
 
 
     render () {
@@ -63,9 +69,12 @@ class SideMenu extends Component {
                 <View style={styles.mainContainer}>
                     {this.state.category.map((value,index)=>{
                         return(
-                            <View style={styles.containerStyle}>
+                            <TouchableOpacity 
+                            style={styles.containerStyle} onPress={this.navigateToScreen('Home')}>
+                               
                                 <Text style={styles.bodyContent}>{value.title}</Text>
-                            </View>
+                                
+                            </TouchableOpacity>
                         )
                     })}
                 </View>
