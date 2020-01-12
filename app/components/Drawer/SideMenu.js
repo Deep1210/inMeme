@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {NavigationActions,StackActions} from 'react-navigation';
 import {ScrollView, Text, View,Image,TouchableOpacity, Alert,AsyncStorage,FlatList} from 'react-native';
-import styles from './sidemenu.style'
+import styles from './sidemenu.style';
 
 
 class SideMenu extends Component {
@@ -11,7 +11,7 @@ class SideMenu extends Component {
         const navigateAction = NavigationActions.navigate({
             routeName: route,
         });
-        this.props.navigation.navigate(route);
+        this.props.navigation.navigate('Home')
     };
 
     constructor(props){
@@ -35,22 +35,24 @@ class SideMenu extends Component {
         fetch('http://207.246.125.54/api/category', {
             method: 'GET'
         }).then(response => {
-            console.log('response', response)
+           
             if (response.status == 200) {
                 return response.json()
             }
         }).then(responseJson => {
-            
             let data = responseJson.results.filter((data)=>
             data.title.toLowerCase()!=='hindi' && data.title.toLowerCase()!=='english' 
             && data.title.toLowerCase()!=='hinglish' 
             )
-            console.log('responseJson', data)
             this.setState({ category: data })
         })
     }
 
-  
+    navigateToScreen = (categoryId) => () => {
+        AsyncStorage.setItem('categoryId',categoryId)
+        this.props.navigation.navigate('Home',{'catId':categoryId})
+        this.props.navigation.closeDrawer()
+    };
 
 
     render () {
@@ -63,9 +65,12 @@ class SideMenu extends Component {
                 <View style={styles.mainContainer}>
                     {this.state.category.map((value,index)=>{
                         return(
-                            <View style={styles.containerStyle}>
+                            <TouchableOpacity 
+                            style={styles.containerStyle} onPress={this.navigateToScreen(value.title)}>
+                               
                                 <Text style={styles.bodyContent}>{value.title}</Text>
-                            </View>
+                                
+                            </TouchableOpacity>
                         )
                     })}
                 </View>

@@ -47,8 +47,7 @@ export default {
 
     bodyContent: {
         alignItems: 'center',
-        fontSize:20,
-        
+        fontSize:20,    
     },
    
     mainContainer: {
