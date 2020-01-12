@@ -207,7 +207,6 @@ export default class HomeScreen extends Component {
 
 
     openDrawer() {
-        console.log('open drawer')
         this.props.navigation.openDrawer()
     }
 
@@ -215,9 +214,13 @@ export default class HomeScreen extends Component {
         return (
             <View style={{ flex: 1 }}>
                 {this.state.show ?
-                    <View style={{ backgroundColor: 'white', flex: 1, justifyContent: 'center' }}>
-                        <TouchableOpacity onPress={() => this.openDrawer()}>
+                    <View style={{ backgroundColor: 'white', flex: 1, alignItems: 'center',flexDirection:'row' }}>
+                        <TouchableOpacity onPress={() => this.openDrawer()} style={{marginLeft:'1%'}}>
                             <Icon size={25} name={'dehaze'} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => this.openDrawer()} style={{marginLeft:'85%'}}>
+                            <Icon size={25} name={'toc'} />
                         </TouchableOpacity>
                     </View>
                     :
