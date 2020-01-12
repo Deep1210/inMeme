@@ -13,7 +13,7 @@ const DrawerNavigator = createDrawerNavigator({
     Home: { screen: Home.HomeScreen }
 },
 {
-    contentComponent:DrawerMenu,
+    contentComponent : DrawerMenu,
     drawerWidth:SCREEN_WIDTH
 })
 
