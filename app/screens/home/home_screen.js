@@ -25,6 +25,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Download} from '../../utils';
 import DeviceInfo from 'react-native-device-info';
 import { ThemeColors } from 'react-navigation';
+import Loader from "../../components/Loader";
 
 
 const SCREEN_HEIGHT = Dimensions.get("window").height
@@ -42,7 +43,8 @@ export default class HomeScreen extends Component {
             swiped: new Animated.ValueXY({ x: 0, y: -SCREEN_HEIGHT }),
             currentIndex: 0,
             show: false,
-            memeData: []
+            memeData: [],
+            loading:true
         }
         this.panResponder = PanResponder.create({
             onStartShouldSetPanResponder: () => true,
@@ -107,7 +109,7 @@ export default class HomeScreen extends Component {
             }
         }).then(responseJson=>{
            
-            this.setState({memeData:responseJson.results})
+            this.setState({memeData:responseJson.results,loading:false})
         })
     }
 
@@ -213,6 +215,7 @@ export default class HomeScreen extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
+                 <Loader loading={this.state.loading} />
                 {this.state.show ?
                     <View style={{ backgroundColor: 'white', flex: 1, alignItems: 'center',flexDirection:'row' }}>
                         <TouchableOpacity onPress={() => this.openDrawer()} style={{marginLeft:'1%'}}>
