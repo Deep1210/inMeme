@@ -13,11 +13,11 @@ const Download = {
             )
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
          
-              Alert.alert("Storage Permission Granted.");
+             
             }
             else {
          
-              Alert.alert("Storage Permission Not Granted");
+             
          
             }
           } catch (err) {

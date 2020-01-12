@@ -35,17 +35,15 @@ class SideMenu extends Component {
         fetch('http://207.246.125.54/api/category', {
             method: 'GET'
         }).then(response => {
-            console.log('response', response)
+           
             if (response.status == 200) {
                 return response.json()
             }
         }).then(responseJson => {
-            
             let data = responseJson.results.filter((data)=>
             data.title.toLowerCase()!=='hindi' && data.title.toLowerCase()!=='english' 
             && data.title.toLowerCase()!=='hinglish' 
             )
-            console.log('responseJson', data)
             this.setState({ category: data })
         })
     }
