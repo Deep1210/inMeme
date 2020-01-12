@@ -148,7 +148,7 @@ export default class HomeScreen extends Component {
                     {...this.panResponder.panHandlers}>
                     <View style={{
                         flex: 1,
-                        position: 'absolute', height: SCREEN_HEIGHT,
+                         height: SCREEN_HEIGHT,
                         width: SCREEN_WIDTH
                     }}>
                         <View style={{ flex: 2 }}>
@@ -222,7 +222,7 @@ export default class HomeScreen extends Component {
                     {this.renderArticles()}
                 </View>
                 {this.state.show ? <View style={{ backgroundColor: 'white', flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                    <Icon size={25} name={'favorite-border'} />
+                    <TouchableOpacity><Icon size={25} name={'favorite-border'} /></TouchableOpacity>
                     <TouchableOpacity onPress={() => this.downloadImage()}><Icon size={25} name={'file-download'} /></TouchableOpacity>
                     <TouchableOpacity onPress={() => this.onShare()}><Icon size={25} name={'share'} /></TouchableOpacity>
                 </View> : (null)}
