@@ -40,16 +40,24 @@ class SideMenu extends Component {
                 return response.json()
             }
         }).then(responseJson => {
-            let data = responseJson.results.filter((data)=>
+            let data = [];
+            let allValue={
+                title:"All",
+                id:0
+            }
+            
+            data=responseJson.results.filter((data)=>
             data.title.toLowerCase()!=='hindi' && data.title.toLowerCase()!=='english' 
             && data.title.toLowerCase()!=='hinglish' 
             )
+            data.push(allValue);
+            console.log("response\...........: ",data)
             this.setState({ category: data })
         })
     }
 
     navigateToScreen = (categoryId) => () => {
-        AsyncStorage.setItem('categoryId',categoryId)
+        AsyncStorage.setItem('categoryId',""+categoryId)
         this.props.navigation.navigate('Home',{'catId':categoryId})
         this.props.navigation.closeDrawer()
     };
@@ -66,7 +74,7 @@ class SideMenu extends Component {
                     {this.state.category.map((value,index)=>{
                         return(
                             <TouchableOpacity 
-                            style={styles.containerStyle} onPress={this.navigateToScreen(value.title)}>
+                            style={styles.containerStyle} onPress={this.navigateToScreen(value.id)}>
                                
                                 <Text style={styles.bodyContent}>{value.title}</Text>
                                 
