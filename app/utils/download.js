@@ -7,15 +7,15 @@ const Download = {
             const granted = PermissionsAndroid.request(
               PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
               {
-                'title': 'ReactNativeCode Storage Permission',
-                'message': 'ReactNativeCode App needs access to your storage to download Photos.'
+                'title': 'InMeme Storage Permission',
+                'message': 'This App needs access to your storage to download Photos.'
               }
             )
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        
+              return true;
             }
             else {
-          
+              return false;
             }
           } catch (err) {
             console.warn(err)
