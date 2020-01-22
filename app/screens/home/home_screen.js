@@ -48,6 +48,7 @@ export default class HomeScreen extends Component {
       swiped: new Animated.ValueXY({x: 0, y: -SCREEN_HEIGHT}),
       currentIndex: 0,
       show: false,
+      language:0,
       memeData: [],
       loading: true,
       noMoreContent: false,
@@ -65,6 +66,7 @@ export default class HomeScreen extends Component {
         }
       },
       onPanResponderRelease: (evt, gestureState) => {
+        console.log(this.state.swiped)
         if (-gestureState.dy == 0) {
           this.setState({show: !this.state.show});
         }
@@ -135,7 +137,7 @@ export default class HomeScreen extends Component {
 
     if (id) {
       fetch(
-        `http://207.246.125.54/api/meme?device=${uniqueId}&category=${id}`,
+        `http://207.246.125.54/api/meme?device=${uniqueId}&category=${id}&language=${this.state.language}`,
         {
           method: 'GET',
         },
@@ -157,7 +159,7 @@ export default class HomeScreen extends Component {
           }
         });
     } else {
-      fetch(`http://207.246.125.54/api/meme?device=${uniqueId}`, {
+      fetch(`http://207.246.125.54/api/meme?device=${uniqueId}&language=${this.state.language}`, {
         method: 'GET',
       })
         .then(response => {
@@ -361,6 +363,60 @@ export default class HomeScreen extends Component {
       });
   }
 
+  selectLanguage(value){
+    console.log(value)
+    if(value==='Hindi'){
+      this.setState({
+        language:1
+      })
+
+      AsyncStorage.getItem('categoryId').then(response => {
+        this.setState({
+          noMoreContent: false,
+          currentIndex: 0,
+          loading: true,
+        });
+        if (response === '0') {
+          this.getMemes(undefined);
+        } else {
+          this.getMemes(response);
+        }
+      });
+    }else if(value==='English'){
+      this.setState({
+        language:0
+      })
+      AsyncStorage.getItem('categoryId').then(response => {
+        this.setState({
+          noMoreContent: false,
+          currentIndex: 0,
+          loading: true,
+        });
+        if (response === '0') {
+          this.getMemes(undefined);
+        } else {
+          this.getMemes(response);
+        }
+      });
+    }else{
+      this.setState({
+        language:2
+      })
+      AsyncStorage.getItem('categoryId').then(response => {
+        this.setState({
+          noMoreContent: false,
+          currentIndex: 0,
+          loading: true,
+        });
+        if (response === '0') {
+          this.getMemes(undefined);
+        } else {
+          this.getMemes(response);
+        }
+      });
+    }
+  }
+
   render() {
     return (
       <View style={{flex: 1}}>
@@ -392,7 +448,7 @@ export default class HomeScreen extends Component {
                 defaultIndex={0}
                 dropdownTextHighlightStyle={{color: 'red'}}
                 options={['English', 'Hindi', 'Hinglish']}
-                onSelect={(index, value) => console.log('value', value)}>
+                onSelect={(index, value) => this.selectLanguage(value)}>
                 <Icon size={25} name={'toc'} />
               </ModalDropdown>
             </TouchableOpacity>

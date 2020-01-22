@@ -72,14 +72,34 @@ class SideMenu extends Component {
                 </View>
                 <View style={styles.mainContainer}>
                     {this.state.category.map((value,index)=>{
-                        return(
-                            <TouchableOpacity 
-                            style={styles.containerStyle} onPress={this.navigateToScreen(value.id)}>
+                        if(value.title==="All"){
+                            return(
+                                <TouchableOpacity 
+                                style={styles.containerStyle} onPress={this.navigateToScreen(value.id)}>
+                                    <Image source={require('./allmeme.png')}
+                                    style={{
+                                        height: 70,
+                                        width: 100
+                                        }}></Image>
                                
                                 <Text style={styles.bodyContent}>{value.title}</Text>
                                 
                             </TouchableOpacity>
+                            )
+                        }else{
+                        return(
+                            <TouchableOpacity 
+                            style={styles.containerStyle} onPress={this.navigateToScreen(value.id)}>
+                               <Image source={{uri: value.avatar}}
+                                        style={{
+                                        height: 100,
+                                        width: 100
+                                        }}></Image>
+                                <Text style={styles.bodyContent}>{value.title}</Text>
+                                
+                            </TouchableOpacity>
                         )
+                        }
                     })}
                 </View>
                 </ScrollView>
