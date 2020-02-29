@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -24,8 +24,8 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {Download} from '../../utils';
-import {NavigationEvents} from 'react-navigation';
+import { Download } from '../../utils';
+import { NavigationEvents } from 'react-navigation';
 import Loader from '../../components/Loader';
 import ModalDropdown from 'react-native-modal-dropdown';
 import DeviceInfo from 'react-native-device-info';
@@ -45,10 +45,10 @@ export default class HomeScreen extends Component {
     //this.position = new Animated.ValueXY(0)
     this.state = {
       pan: new Animated.ValueXY(),
-      swiped: new Animated.ValueXY({x: 0, y: -SCREEN_HEIGHT}),
+      swiped: new Animated.ValueXY({ x: 0, y: -SCREEN_HEIGHT }),
       currentIndex: 0,
       show: false,
-      language:0,
+      language: 0,
       memeData: [],
       loading: true,
       noMoreContent: false,
@@ -62,13 +62,12 @@ export default class HomeScreen extends Component {
             y: -SCREEN_HEIGHT + gestureState.dy,
           });
         } else {
-          this.state.pan.setValue({x: 0, y: gestureState.dy});
+          this.state.pan.setValue({ x: 0, y: gestureState.dy });
         }
       },
       onPanResponderRelease: (evt, gestureState) => {
-        console.log(this.state.swiped)
         if (-gestureState.dy == 0) {
-          this.setState({show: !this.state.show});
+          this.setState({ show: !this.state.show });
         }
         if (
           this.state.currentIndex > 0 &&
@@ -76,27 +75,27 @@ export default class HomeScreen extends Component {
           gestureState.vy > 0.7
         ) {
           Animated.timing(this.state.swiped, {
-            toValue: {x: 0, y: 0},
+            toValue: { x: 0, y: 0 },
             duration: 400,
           }).start(() => {
-            this.setState({currentIndex: this.state.currentIndex - 1});
-            this.state.swiped.setValue({x: 0, y: -SCREEN_HEIGHT});
+            this.setState({ currentIndex: this.state.currentIndex - 1 });
+            this.state.swiped.setValue({ x: 0, y: -SCREEN_HEIGHT });
           });
         } else if (-gestureState.dy > 50 && -gestureState.vy > 0.7) {
           Animated.timing(this.state.pan, {
-            toValue: {x: 0, y: -SCREEN_HEIGHT},
+            toValue: { x: 0, y: -SCREEN_HEIGHT },
             duration: 400,
           }).start(() => {
-            this.setState({currentIndex: this.state.currentIndex + 1});
-            this.state.pan.setValue({x: 0, y: 0});
+            this.setState({ currentIndex: this.state.currentIndex + 1 });
+            this.state.pan.setValue({ x: 0, y: 0 });
           });
         } else {
           Animated.parallel([
             Animated.spring(this.state.pan, {
-              toValue: {x: 0, y: 0},
+              toValue: { x: 0, y: 0 },
             }),
             Animated.spring(this.state.swiped, {
-              toValue: {x: 0, y: -SCREEN_HEIGHT},
+              toValue: { x: 0, y: -SCREEN_HEIGHT },
             }),
           ]).start();
         }
@@ -149,7 +148,7 @@ export default class HomeScreen extends Component {
         })
         .then(responseJson => {
           if (responseJson.results.length > 0) {
-            this.setState({memeData: responseJson.results, loading: false});
+            this.setState({ memeData: responseJson.results, loading: false });
           } else {
             this.setState({
               memeData: responseJson.results,
@@ -168,7 +167,7 @@ export default class HomeScreen extends Component {
           }
         })
         .then(responseJson => {
-          this.setState({memeData: responseJson.results, loading: false});
+          this.setState({ memeData: responseJson.results, loading: false });
         });
     }
   }
@@ -195,10 +194,12 @@ export default class HomeScreen extends Component {
 
   onShare = async () => {
     try {
+      let url = this.state.memeData[this.state.currentIndex] ? this.state.memeData[this.state.currentIndex].avatar : '';
       const result = await Share.share({
         message:
           'Meme Planet' +
           '\n' +
+          url + '\n' +
           'Let me recommend you this application\n\n' +
           'https://play.google.com/store/apps/details?id=com.inmeme',
       });
@@ -221,7 +222,7 @@ export default class HomeScreen extends Component {
     return this.state.memeData
       .map((item, i) => {
         if (this.state.currentIndex == this.state.memeData.length) {
-          this.setState({noMoreContent: true});
+          this.setState({ noMoreContent: true });
         }
         if (i == this.state.currentIndex - 1) {
           return (
@@ -235,9 +236,9 @@ export default class HomeScreen extends Component {
                   height: SCREEN_HEIGHT,
                   width: SCREEN_WIDTH,
                 }}>
-                <View style={{flex: 2}}>
+                <View style={{ flex: 2 }}>
                   <Image
-                    source={{uri: item.avatar}}
+                    source={{ uri: item.avatar }}
                     style={{
                       flex: 1,
                       height: null,
@@ -266,9 +267,9 @@ export default class HomeScreen extends Component {
                   height: SCREEN_HEIGHT,
                   width: SCREEN_WIDTH,
                 }}>
-                <View style={{flex: 2}}>
+                <View style={{ flex: 2 }}>
                   <Image
-                    source={{uri: item.avatar}}
+                    source={{ uri: item.avatar }}
                     style={{
                       flex: 1,
                       height: null,
@@ -291,9 +292,9 @@ export default class HomeScreen extends Component {
                   height: SCREEN_HEIGHT,
                   width: SCREEN_WIDTH,
                 }}>
-                <View style={{flex: 2}}>
+                <View style={{ flex: 2 }}>
                   <Image
-                    source={{uri: item.avatar}}
+                    source={{ uri: item.avatar }}
                     style={{
                       flex: 1,
                       height: null,
@@ -335,7 +336,7 @@ export default class HomeScreen extends Component {
     };
     fetch(
       `http://207.246.125.54/api/meme/${
-        this.state.memeData[this.state.currentIndex].id
+      this.state.memeData[this.state.currentIndex].id
       }/like-unlike/`,
       {
         method: 'post',
@@ -363,11 +364,11 @@ export default class HomeScreen extends Component {
       });
   }
 
-  selectLanguage(value){
+  selectLanguage(value) {
     console.log(value)
-    if(value==='Hindi'){
+    if (value === 'Hindi') {
       this.setState({
-        language:1
+        language: 1
       })
 
       AsyncStorage.getItem('categoryId').then(response => {
@@ -382,9 +383,9 @@ export default class HomeScreen extends Component {
           this.getMemes(response);
         }
       });
-    }else if(value==='English'){
+    } else if (value === 'English') {
       this.setState({
-        language:0
+        language: 0
       })
       AsyncStorage.getItem('categoryId').then(response => {
         this.setState({
@@ -398,9 +399,9 @@ export default class HomeScreen extends Component {
           this.getMemes(response);
         }
       });
-    }else{
+    } else {
       this.setState({
-        language:2
+        language: 2
       })
       AsyncStorage.getItem('categoryId').then(response => {
         this.setState({
@@ -419,7 +420,7 @@ export default class HomeScreen extends Component {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Loader loading={this.state.loading} />
         {this.state.show || this.state.noMoreContent ? (
           <View
@@ -431,22 +432,22 @@ export default class HomeScreen extends Component {
             }}>
             <TouchableOpacity
               onPress={() => this.openDrawer()}
-              style={{marginLeft: '1%'}}>
+              style={{ marginLeft: '1%' }}>
               <Icon size={25} name={'dehaze'} />
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={() => this.openDrawer()}
-              style={{marginLeft: '84%'}}>
+              style={{ marginLeft: '84%' }}>
               {
                 // <Icon size={25} name={'toc'} />
               }
               <ModalDropdown
-                dropdownStyle={{width: 100, height: 110}}
-                dropdownTextStyle={{color: 'black'}}
+                dropdownStyle={{ width: 100, height: 110 }}
+                dropdownTextStyle={{ color: 'black' }}
                 defaultValue={'English'}
                 defaultIndex={0}
-                dropdownTextHighlightStyle={{color: 'red'}}
+                dropdownTextHighlightStyle={{ color: 'red' }}
                 options={['English', 'Hindi', 'Hinglish']}
                 onSelect={(index, value) => this.selectLanguage(value)}>
                 <Icon size={25} name={'toc'} />
@@ -456,15 +457,15 @@ export default class HomeScreen extends Component {
         ) : null}
         {this.state.noMoreContent ? (
           <View
-            style={{flex: 12, justifyContent: 'center', alignItems: 'center'}}>
-            <Icon size={80} name={'insert-photo'} style={{color: '#d3d3d3'}} />
-            <Text style={{fontSize: 30, textAlign: 'center', color: '#d3d3d3'}}>
+            style={{ flex: 12, justifyContent: 'center', alignItems: 'center' }}>
+            <Icon size={80} name={'insert-photo'} style={{ color: '#d3d3d3' }} />
+            <Text style={{ fontSize: 30, textAlign: 'center', color: '#d3d3d3' }}>
               No More Memes
             </Text>
           </View>
         ) : (
-          <View style={{flex: 12}}>{this.renderArticles()}</View>
-        )}
+            <View style={{ flex: 12 }}>{this.renderArticles()}</View>
+          )}
         {this.state.show && !this.state.noMoreContent ? (
           <View
             style={{
@@ -476,13 +477,13 @@ export default class HomeScreen extends Component {
             }}>
             <TouchableOpacity
               onPress={() => this.clickLike()}
-              style={{flexDirection: 'row'}}>
+              style={{ flexDirection: 'row' }}>
               <Icon
                 size={25}
                 name={'favorite-border'}
-                style={{color: this.getColor()}}
+                style={{ color: this.getColor() }}
               />
-              <Text style={{fontSize: 16}}>
+              <Text style={{ fontSize: 16 }}>
                 {this.state.memeData[this.state.currentIndex]
                   ? this.state.memeData[this.state.currentIndex].vote
                   : null}
