@@ -7,6 +7,7 @@
  */
 
 import React, { Component } from 'react';
+import Swiper from 'react-native-deck-swiper';
 import {
   SafeAreaView,
   StyleSheet,
@@ -19,6 +20,7 @@ import {
   Animated,
   PanResponder,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Share,
   AsyncStorage,
   PermissionsAndroid,
@@ -35,6 +37,23 @@ import {
   PublisherBanner,
   AdMobRewarded,
 } from 'react-native-admob';
+import imageCacheHoc from 'react-native-image-cache-hoc';
+import FastImage from 'react-native-fast-image';
+
+const placeHolderImage = require('../home/placeholder.png')
+
+const propOverridePlaceholderObject = {
+  component: Image,
+  props: {
+    source: { placeHolderImage }
+  }
+};
+
+const CacheableImage = imageCacheHoc(Image, {
+  fileHostWhitelist: ['207.246.125.54']
+});
+
+
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -199,7 +218,6 @@ export default class HomeScreen extends Component {
         message:
           'Meme Planet' +
           '\n' +
-          url + '\n' +
           'Let me recommend you this application\n\n' +
           'https://play.google.com/store/apps/details?id=com.inmeme',
       });
@@ -218,99 +236,99 @@ export default class HomeScreen extends Component {
     }
   };
 
-  renderArticles = () => {
-    return this.state.memeData
-      .map((item, i) => {
-        if (this.state.currentIndex == this.state.memeData.length) {
-          this.setState({ noMoreContent: true });
-        }
-        if (i == this.state.currentIndex - 1) {
-          return (
-            <Animated.View
-              key={item.id}
-              style={this.state.swiped.getLayout()}
-              {...this.panResponder.panHandlers}>
-              <View
-                style={{
-                  flex: 1,
-                  height: SCREEN_HEIGHT,
-                  width: SCREEN_WIDTH,
-                }}>
-                <View style={{ flex: 2 }}>
-                  <Image
-                    source={{ uri: item.avatar }}
-                    style={{
-                      flex: 1,
-                      height: null,
-                      width: null,
-                      resizeMode: 'center',
-                      backgroundColor: 'black',
-                    }}
-                  />
-                </View>
-              </View>
-            </Animated.View>
-          );
-        } else if (i < this.state.currentIndex) {
-          return null;
-        }
-        if (i == this.state.currentIndex) {
-          return (
-            <Animated.View
-              key={item.id}
-              style={this.state.pan.getLayout()}
-              {...this.panResponder.panHandlers}>
-              <View
-                style={{
-                  flex: 1,
-                  position: 'absolute',
-                  height: SCREEN_HEIGHT,
-                  width: SCREEN_WIDTH,
-                }}>
-                <View style={{ flex: 2 }}>
-                  <Image
-                    source={{ uri: item.avatar }}
-                    style={{
-                      flex: 1,
-                      height: null,
-                      width: null,
-                      resizeMode: 'center',
-                      backgroundColor: 'black',
-                    }}
-                  />
-                </View>
-              </View>
-            </Animated.View>
-          );
-        } else {
-          return (
-            <Animated.View key={item.id}>
-              <View
-                style={{
-                  flex: 1,
-                  position: 'absolute',
-                  height: SCREEN_HEIGHT,
-                  width: SCREEN_WIDTH,
-                }}>
-                <View style={{ flex: 2 }}>
-                  <Image
-                    source={{ uri: item.avatar }}
-                    style={{
-                      flex: 1,
-                      height: null,
-                      width: null,
-                      resizeMode: 'center',
-                      backgroundColor: 'black',
-                    }}
-                  />
-                </View>
-              </View>
-            </Animated.View>
-          );
-        }
-      })
-      .reverse();
-  };
+  // renderArticles = () => {
+  //   return this.state.memeData
+  //     .map((item, i) => {
+  //       if (this.state.currentIndex == this.state.memeData.length) {
+  //         this.setState({ noMoreContent: true });
+  //       }
+  //       if (i == this.state.currentIndex - 1) {
+  //         return (
+  //           <Animated.View
+  //             key={item.id}
+  //             style={this.state.swiped.getLayout()}
+  //             {...this.panResponder.panHandlers}>
+  //             <View
+  //               style={{
+  //                 flex: 1,
+  //                 height: SCREEN_HEIGHT,
+  //                 width: SCREEN_WIDTH,
+  //               }}>
+  //               <View style={{ flex: 2 }}>
+  //                 <Image
+  //                   source={{ uri: item.avatar }}
+  //                   style={{
+  //                     flex: 1,
+  //                     height: null,
+  //                     width: null,
+  //                     resizeMode: 'center',
+  //                     backgroundColor: 'black',
+  //                   }}
+  //                 />
+  //               </View>
+  //             </View>
+  //           </Animated.View>
+  //         );
+  //       } else if (i < this.state.currentIndex) {
+  //         return null;
+  //       }
+  //       if (i == this.state.currentIndex) {
+  //         return (
+  //           <Animated.View
+  //             key={item.id}
+  //             style={this.state.pan.getLayout()}
+  //             {...this.panResponder.panHandlers}>
+  //             <View
+  //               style={{
+  //                 flex: 1,
+  //                 position: 'absolute',
+  //                 height: SCREEN_HEIGHT,
+  //                 width: SCREEN_WIDTH,
+  //               }}>
+  //               <View style={{ flex: 2 }}>
+  //                 <Image
+  //                   source={{ uri: item.avatar }}
+  //                   style={{
+  //                     flex: 1,
+  //                     height: null,
+  //                     width: null,
+  //                     resizeMode: 'center',
+  //                     backgroundColor: 'black',
+  //                   }}
+  //                 />
+  //               </View>
+  //             </View>
+  //           </Animated.View>
+  //         );
+  //       } else {
+  //         return (
+  //           <Animated.View key={item.id}>
+  //             <View
+  //               style={{
+  //                 flex: 1,
+  //                 position: 'absolute',
+  //                 height: SCREEN_HEIGHT,
+  //                 width: SCREEN_WIDTH,
+  //               }}>
+  //               <View style={{ flex: 2 }}>
+  //                 <Image
+  //                   source={{ uri: item.avatar }}
+  //                   style={{
+  //                     flex: 1,
+  //                     height: null,
+  //                     width: null,
+  //                     resizeMode: 'center',
+  //                     backgroundColor: 'black',
+  //                   }}
+  //                 />
+  //               </View>
+  //             </View>
+  //           </Animated.View>
+  //         );
+  //       }
+  //     })
+  //     .reverse();
+  // };
 
   openDrawer() {
     this.props.navigation.openDrawer();
@@ -418,6 +436,114 @@ export default class HomeScreen extends Component {
     }
   }
 
+  setCurrentIndex(currentIndexNumber) {
+   
+    if (currentIndexNumber >= 0) {
+      console.log("cureent index..........777777777: ", currentIndexNumber)
+      if (this.state.memeData.length === currentIndexNumber + 1) {
+        this.setState({
+          noMoreContent: true
+        })
+      } else {
+        this.setState({
+          currentIndex: currentIndexNumber
+        })
+      }
+    }else{
+      this.setState({
+        currentIndex: 1
+      })
+    }
+
+  }
+
+  renderArticles(data) {
+
+    return (
+      <Swiper
+        cards={data}
+        ref={swiper => {
+          this.swiper = swiper
+        }}
+        stackSize={2}
+        renderCard={(card) => {
+          return (
+            <TouchableWithoutFeedback
+              onPress={() => this.setState({ show: !this.state.show })}
+              style={{
+                flex: 1,
+                height: SCREEN_HEIGHT,
+                width: SCREEN_WIDTH,
+                borderRadius: 10
+              }}>
+
+              <FastImage
+                source={{
+                  uri: data.length > 0 ? card ? card.avatar : '' : '',
+                  cache: FastImage.cacheControl.immutable
+                }}
+                resizeMode={FastImage.resizeMode.contain}
+                style={{
+                  flex: 1,
+                  height: null,
+                  width: null,
+                  backgroundColor: 'black',
+                }}
+              />
+
+
+            </TouchableWithoutFeedback>
+          )
+        }}
+        swipeBackCard
+        disableRightSwipe={true}
+        disableLeftSwipe={true}
+        onSwipedTop={(cardIndex) => { this.setCurrentIndex(cardIndex) }}
+        onSwipedBottom={this.swipeCardBottom}
+        //goBackToPreviousCardOnSwipeBottom={true}
+        //onSwiped={(cardIndex) => { this.setCurrentIndex(cardIndex) }}
+        cardIndex={this.state.currentIndex}
+        backgroundColor={'black'}
+        infinite={true}>
+      </Swiper>
+    )
+  }
+
+  setIsSwiping = (index, isSwipingBack) => {
+
+
+    if (this.state.memeData.length === index + 1) {
+      this.setState({
+        noMoreContent: true
+      })
+    } else {
+        this.setState({
+          currentIndex: this.state.currentIndex-1
+        })
+
+    }
+    
+
+  };
+
+  // swipeCard = (index) => {
+    
+
+  //     this.swiper.swipeCard(() => {
+  //       this.setIsSwiping(index, false)
+  //     })
+    
+  // };
+
+  swipeCardBottom = (index) => {
+   
+      this.swiper.swipeBack();
+      this.setState({
+        currentIndex: this.state.currentIndex-2
+      })
+
+  };
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -426,7 +552,7 @@ export default class HomeScreen extends Component {
           <View
             style={{
               backgroundColor: 'white',
-              flex: 1,
+              height: 50,
               alignItems: 'center',
               flexDirection: 'row',
             }}>
@@ -457,20 +583,20 @@ export default class HomeScreen extends Component {
         ) : null}
         {this.state.noMoreContent ? (
           <View
-            style={{ flex: 12, justifyContent: 'center', alignItems: 'center' }}>
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Icon size={80} name={'insert-photo'} style={{ color: '#d3d3d3' }} />
             <Text style={{ fontSize: 30, textAlign: 'center', color: '#d3d3d3' }}>
               No More Memes
             </Text>
           </View>
         ) : (
-            <View style={{ flex: 12 }}>{this.renderArticles()}</View>
+            <View style={{ flex: 1 }}>{this.renderArticles(this.state.memeData)}</View>
           )}
         {this.state.show && !this.state.noMoreContent ? (
           <View
             style={{
               backgroundColor: 'white',
-              flex: 1,
+              height: 50,
               flexDirection: 'row',
               justifyContent: 'space-evenly',
               alignItems: 'center',
@@ -506,3 +632,23 @@ export default class HomeScreen extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F5FCFF"
+  },
+  card: {
+    flex: 1,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: "#E8E8E8",
+    justifyContent: "center",
+    backgroundColor: "white"
+  },
+  text: {
+    textAlign: "center",
+    fontSize: 50,
+    backgroundColor: "transparent"
+  }
+});
