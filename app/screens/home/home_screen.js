@@ -437,7 +437,7 @@ export default class HomeScreen extends Component {
   setCurrentIndex(currentIndexNumber) {
    
     if (currentIndexNumber >= 0) {
-      console.log("cureent index..........777777777: ", currentIndexNumber)
+      //console.log("cureent index..........777777777: ", currentIndexNumber)
       if (this.state.memeData.length === currentIndexNumber + 1) {
         this.setState({
           noMoreContent: true
@@ -449,7 +449,7 @@ export default class HomeScreen extends Component {
       }
     }else{
       this.setState({
-        currentIndex: 1
+        currentIndex: 0
       })
     }
 
@@ -496,10 +496,10 @@ export default class HomeScreen extends Component {
         swipeBackCard
         disableRightSwipe={true}
         disableLeftSwipe={true}
-        onSwipedTop={(cardIndex) => { this.setCurrentIndex(cardIndex) }}
-        onSwipedBottom={this.swipeCardBottom}
-        //goBackToPreviousCardOnSwipeBottom={true}
-        //onSwiped={(cardIndex) => { this.setCurrentIndex(cardIndex) }}
+        //onSwipedTop={(cardIndex) => { this.setCurrentIndex(cardIndex) }}
+        //onSwipedBottom={this.swipeCardBottom}
+        goBackToPreviousCardOnSwipeBottom={true}
+        onSwiped={(cardIndex) => { this.setCurrentIndex(cardIndex) }}
         cardIndex={this.state.currentIndex}
         backgroundColor={'black'}
         infinite={true}>
@@ -533,14 +533,14 @@ export default class HomeScreen extends Component {
     
   // };
 
-  swipeCardBottom = (index) => {
+  // swipeCardBottom = (index) => {
    
-      this.swiper.swipeBack();
-      this.setState({
-        currentIndex: this.state.currentIndex-2
-      })
+  //     this.swiper.swipeBack();
+  //     this.setState({
+  //       currentIndex: this.state.currentIndex-2
+  //     })
 
-  };
+  // };
 
   render() {
     return (
