@@ -67,7 +67,7 @@ export default class HomeScreen extends Component {
       swiped: new Animated.ValueXY({ x: 0, y: -SCREEN_HEIGHT }),
       currentIndex: 0,
       show: false,
-      language: 0,
+      language: 2,
       memeData: [],
       loading: true,
       noMoreContent: false,
@@ -216,10 +216,8 @@ export default class HomeScreen extends Component {
       let url = this.state.memeData[this.state.currentIndex] ? this.state.memeData[this.state.currentIndex].avatar : '';
       const result = await Share.share({
         message:
-          'Meme Planet' +
-          '\n' +
-          'Let me recommend you this application\n\n' +
-          'https://play.google.com/store/apps/details?id=com.inmeme',
+          'Check out Public app. I found it best for watching news.\n\n' +
+          'https://play.google.com/store/apps/details?id=com.cardfeed.video_public',
       });
 
       if (result.action === Share.sharedAction) {
@@ -574,7 +572,7 @@ export default class HomeScreen extends Component {
                 defaultValue={'English'}
                 defaultIndex={0}
                 dropdownTextHighlightStyle={{ color: 'red' }}
-                options={['English', 'Hindi', 'Hinglish']}
+                options={['Hinglish','English', 'Hindi']}
                 onSelect={(index, value) => this.selectLanguage(value)}>
                 <Icon size={25} name={'toc'} />
               </ModalDropdown>
