@@ -177,6 +177,7 @@ export default class HomeScreen extends Component {
           }
         });
     } else {
+      console.log('$$$$$$$state..........',this.state.language)
       fetch(`http://207.246.125.54/api/meme?device=${uniqueId}&language=${this.state.language}`, {
         method: 'GET',
       })
@@ -186,7 +187,13 @@ export default class HomeScreen extends Component {
           }
         })
         .then(responseJson => {
-          this.setState({ memeData: responseJson.results, loading: false });
+          console.log('$$$$$$responseData............... = ',responseJson.results)
+          if(responseJson.results.length>0){
+            this.setState({ memeData: responseJson.results, loading: false });
+          }else{
+            this.setState({ memeData: responseJson.results,noMoreContent:true, loading: false });
+          }
+          
         });
     }
   }
@@ -346,6 +353,7 @@ export default class HomeScreen extends Component {
 
   clickLike() {
     let uniqueId = DeviceInfo.getUniqueId();
+    console.log('...................',this.state.currentIndex,this.state.memeData[this.state.currentIndex].id)
     let data = {
       device_id: uniqueId,
       meme: this.state.memeData[this.state.currentIndex].id,
@@ -370,7 +378,6 @@ export default class HomeScreen extends Component {
       })
       .then(responseJson => {
         AsyncStorage.getItem('categoryId').then(response => {
-          console.log(response);
           if (response === '0') {
             this.getMemes(undefined);
           } else {
@@ -381,7 +388,6 @@ export default class HomeScreen extends Component {
   }
 
   selectLanguage(value) {
-    console.log(value)
     if (value === 'Hindi') {
       this.setState({
         language: 1
@@ -437,7 +443,7 @@ export default class HomeScreen extends Component {
   setCurrentIndex(currentIndexNumber) {
    
     if (currentIndexNumber >= 0) {
-      //console.log("cureent index..........777777777: ", currentIndexNumber)
+      console.log("cureent index..........777777777: ", currentIndexNumber)
       if (this.state.memeData.length === currentIndexNumber + 1) {
         this.setState({
           noMoreContent: true
@@ -623,7 +629,7 @@ export default class HomeScreen extends Component {
         ) : null}
         <AdMobBanner
           adSize="fullBanner"
-          adUnitID="ca-app-pub-4520361263876285/4705277361"
+          adUnitID="ca-app-pub-5457194506992783/4587476800"
           didFailToReceiveAdWithError={error => console.log(error)}
         />
       </View>
