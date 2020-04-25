@@ -242,8 +242,8 @@ export default class HomeScreen extends Component {
       let url = this.state.memeData[this.state.currentIndex] ? this.state.memeData[this.state.currentIndex].avatar : '';
       const result = await Share.share({
         message:
-          'Check out Public app. I found it best for watching news.\n\n' +
-          'https://play.google.com/store/apps/details?id=com.cardfeed.video_public',
+          'Check out Inmeme app. I found it best for watching current memes, indian memes and  jokes.\n\n' +
+          'https://play.google.com/store/apps/details?id=com.inmeme',
       });
 
       if (result.action === Share.sharedAction) {
