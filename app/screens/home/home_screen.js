@@ -69,6 +69,7 @@ export default class HomeScreen extends Component {
       show: false,
       language: 2,
       memeData: [],
+      page: 1,
       loading: true,
       noMoreContent: false,
     };
@@ -140,6 +141,7 @@ export default class HomeScreen extends Component {
       this.setState({
         noMoreContent: false,
         currentIndex: 0,
+        page: 1,
         loading: true,
       });
       if (response === '0') {
@@ -152,10 +154,10 @@ export default class HomeScreen extends Component {
 
   getMemes(id) {
     let uniqueId = DeviceInfo.getUniqueId();
-
+    console.log("url.............:::",`http://207.246.125.54/api/meme?device=${uniqueId}&language=${this.state.language}&page=${this.state.page}`)
     if (id) {
       fetch(
-        `http://207.246.125.54/api/meme?device=${uniqueId}&category=${id}&language=${this.state.language}`,
+        `http://207.246.125.54/api/meme?device=${uniqueId}&category=${id}&language=${this.state.language}&page=${this.state.page}`,
         {
           method: 'GET',
         },
@@ -163,11 +165,13 @@ export default class HomeScreen extends Component {
         .then(response => {
           if (response.status == 200) {
             return response.json();
+          }else{
+            this.setState({ memeData: [], noMoreContent: true, loading: false });
           }
         })
         .then(responseJson => {
           if (responseJson.results.length > 0) {
-            this.setState({ memeData: responseJson.results, loading: false });
+            this.setState({ memeData: this.state.memeData.concat(responseJson.results), loading: false });
           } else {
             this.setState({
               memeData: responseJson.results,
@@ -177,23 +181,28 @@ export default class HomeScreen extends Component {
           }
         });
     } else {
-      console.log('$$$$$$$state..........',this.state.language)
-      fetch(`http://207.246.125.54/api/meme?device=${uniqueId}&language=${this.state.language}`, {
+        console.log("url.............:::",`http://207.246.125.54/api/meme?device=${uniqueId}&language=${this.state.language}&page=${this.state.page}`)
+      fetch(`http://207.246.125.54/api/meme?device=${uniqueId}&language=${this.state.language}&page=${this.state.page}`, {
         method: 'GET',
       })
         .then(response => {
           if (response.status == 200) {
             return response.json();
+          }else{
+            this.setState({ memeData: [], noMoreContent: true, loading: false });
           }
         })
         .then(responseJson => {
-          console.log('$$$$$$responseData............... = ',responseJson.results)
-          if(responseJson.results.length>0){
-            this.setState({ memeData: responseJson.results, loading: false });
-          }else{
-            this.setState({ memeData: responseJson.results,noMoreContent:true, loading: false });
+          console.log("results///////........: ",responseJson.results)
+          if (responseJson.results.length > 0) {
+            this.setState({ memeData: this.state.memeData.concat(responseJson.results), loading: false });
+          } else {
+            this.setState({ memeData: responseJson.results, noMoreContent: true, loading: false });
           }
+
+        }).catch((err)=>{
           
+          console.log("error :",err)
         });
     }
   }
@@ -353,7 +362,7 @@ export default class HomeScreen extends Component {
 
   clickLike() {
     let uniqueId = DeviceInfo.getUniqueId();
-    console.log('...................',this.state.currentIndex,this.state.memeData[this.state.currentIndex].id)
+    
     let data = {
       device_id: uniqueId,
       meme: this.state.memeData[this.state.currentIndex].id,
@@ -390,7 +399,8 @@ export default class HomeScreen extends Component {
   selectLanguage(value) {
     if (value === 'Hindi') {
       this.setState({
-        language: 1
+        language: 1,
+        page:1,
       })
 
       AsyncStorage.getItem('categoryId').then(response => {
@@ -407,12 +417,14 @@ export default class HomeScreen extends Component {
       });
     } else if (value === 'English') {
       this.setState({
-        language: 0
+        language: 0,
+        page:1
       })
       AsyncStorage.getItem('categoryId').then(response => {
         this.setState({
           noMoreContent: false,
           currentIndex: 0,
+          
           loading: true,
         });
         if (response === '0') {
@@ -423,12 +435,14 @@ export default class HomeScreen extends Component {
       });
     } else {
       this.setState({
-        language: 2
+        language: 2,
+        page:1
       })
       AsyncStorage.getItem('categoryId').then(response => {
         this.setState({
           noMoreContent: false,
           currentIndex: 0,
+         
           loading: true,
         });
         if (response === '0') {
@@ -441,19 +455,33 @@ export default class HomeScreen extends Component {
   }
 
   setCurrentIndex(currentIndexNumber) {
-   
+
     if (currentIndexNumber >= 0) {
-      console.log("cureent index..........777777777: ", currentIndexNumber)
+
       if (this.state.memeData.length === currentIndexNumber + 1) {
-        this.setState({
-          noMoreContent: true
-        })
+        AsyncStorage.getItem('categoryId').then(response => {
+          this.setState({
+            noMoreContent: false,
+            currentIndex: 0,
+            loading: true,
+            page:this.state.page+1,
+            currentIndex: currentIndexNumber
+          });
+          console.log(response)
+          if (response === '0') {
+            this.getMemes(undefined);
+          } else {
+           
+            this.getMemes(response);
+          }
+        });
+
       } else {
         this.setState({
           currentIndex: currentIndexNumber
         })
       }
-    }else{
+    } else {
       this.setState({
         currentIndex: 0
       })
@@ -521,26 +549,26 @@ export default class HomeScreen extends Component {
         noMoreContent: true
       })
     } else {
-        this.setState({
-          currentIndex: this.state.currentIndex-1
-        })
+      this.setState({
+        currentIndex: this.state.currentIndex - 1
+      })
 
     }
-    
+
 
   };
 
   // swipeCard = (index) => {
-    
+
 
   //     this.swiper.swipeCard(() => {
   //       this.setIsSwiping(index, false)
   //     })
-    
+
   // };
 
   // swipeCardBottom = (index) => {
-   
+
   //     this.swiper.swipeBack();
   //     this.setState({
   //       currentIndex: this.state.currentIndex-2
@@ -578,7 +606,7 @@ export default class HomeScreen extends Component {
                 defaultValue={'English'}
                 defaultIndex={0}
                 dropdownTextHighlightStyle={{ color: 'red' }}
-                options={['Hinglish','English', 'Hindi']}
+                options={['Hinglish', 'English', 'Hindi']}
                 onSelect={(index, value) => this.selectLanguage(value)}>
                 <Icon size={25} name={'toc'} />
               </ModalDropdown>
