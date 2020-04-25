@@ -170,8 +170,14 @@ export default class HomeScreen extends Component {
           }
         })
         .then(responseJson => {
+          console.log("results///////........: ",responseJson.results)
           if (responseJson.results.length > 0) {
-            this.setState({ memeData: this.state.memeData.concat(responseJson.results), loading: false });
+            if(this.state.page===1){
+              this.setState({ memeData: responseJson.results, loading: false });
+            }else{
+              this.setState({ memeData: this.state.memeData.concat(responseJson.results), loading: false });
+            }
+            
           } else {
             this.setState({
               memeData: responseJson.results,
@@ -195,7 +201,11 @@ export default class HomeScreen extends Component {
         .then(responseJson => {
           console.log("results///////........: ",responseJson.results)
           if (responseJson.results.length > 0) {
-            this.setState({ memeData: this.state.memeData.concat(responseJson.results), loading: false });
+            if(this.state.page===1){
+              this.setState({ memeData: responseJson.results, loading: false });
+            }else{
+              this.setState({ memeData: this.state.memeData.concat(responseJson.results), loading: false });
+            }
           } else {
             this.setState({ memeData: responseJson.results, noMoreContent: true, loading: false });
           }
@@ -367,6 +377,9 @@ export default class HomeScreen extends Component {
       device_id: uniqueId,
       meme: this.state.memeData[this.state.currentIndex].id,
     };
+    console.log("url.......: ",data,`http://207.246.125.54/api/meme/${
+      this.state.memeData[this.state.currentIndex].id
+      }/like-unlike/`);
     fetch(
       `http://207.246.125.54/api/meme/${
       this.state.memeData[this.state.currentIndex].id
