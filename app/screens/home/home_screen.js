@@ -616,7 +616,7 @@ export default class HomeScreen extends Component {
               <ModalDropdown
                 dropdownStyle={{ width: 100, height: 110 }}
                 dropdownTextStyle={{ color: 'black' }}
-                defaultValue={'English'}
+                defaultValue={'Hinglish'}
                 defaultIndex={0}
                 dropdownTextHighlightStyle={{ color: 'red' }}
                 options={['Hinglish', 'English', 'Hindi']}
