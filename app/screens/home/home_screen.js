@@ -727,8 +727,8 @@ export default class HomeScreen extends Component {
         ) : null}
         <AdMobBanner
           adSize="fullBanner"
-          adUnitID="ca-app-pub-5457194506992783/4587476800"
-          didFailToReceiveAdWithError={error => console.log(error)}
+          adUnitID="ca-app-pub-5457194506992783/8798978110"
+          onFailedToLoad={error => console.log('error', error)}
         />
       </View>
     );
