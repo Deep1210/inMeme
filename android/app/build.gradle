@@ -130,11 +130,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.inmeme"
+        applicationId "com.inmemes"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 6
-        versionName "1.5"
+        versionCode 2
+        versionName "1.0.1"
         multiDexEnabled true
     }
     splits {
