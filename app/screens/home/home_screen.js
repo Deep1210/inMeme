@@ -27,7 +27,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Download, OnShare } from '../../utils';
-import { NavigationEvents } from 'react-navigation';
+import { NavigationEvents, ThemeColors } from 'react-navigation';
 import Loader from '../../components/Loader';
 import ModalDropdown from 'react-native-modal-dropdown';
 import DeviceInfo from 'react-native-device-info';
@@ -68,59 +68,16 @@ export default class HomeScreen extends Component {
       show: false,
       language: 2,
       memeData: [],
+      savedIndex: 0,
+      swipfirst: false,
       page: 1,
       loading: true,
       noMoreContent: false,
     };
-    this.panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (evt, gestureState) => {
-        if (gestureState.dy > 0 && this.state.currentIndex > 0) {
-          this.state.swiped.setValue({
-            x: 0,
-            y: -SCREEN_HEIGHT + gestureState.dy,
-          });
-        } else {
-          this.state.pan.setValue({ x: 0, y: gestureState.dy });
-        }
-      },
-      onPanResponderRelease: (evt, gestureState) => {
-        if (-gestureState.dy == 0) {
-          this.setState({ show: !this.state.show });
-        }
-        if (
-          this.state.currentIndex > 0 &&
-          gestureState.dy > 50 &&
-          gestureState.vy > 0.7
-        ) {
-          Animated.timing(this.state.swiped, {
-            toValue: { x: 0, y: 0 },
-            duration: 400,
-          }).start(() => {
-            this.setState({ currentIndex: this.state.currentIndex - 1 });
-            this.state.swiped.setValue({ x: 0, y: -SCREEN_HEIGHT });
-          });
-        } else if (-gestureState.dy > 50 && -gestureState.vy > 0.7) {
-          Animated.timing(this.state.pan, {
-            toValue: { x: 0, y: -SCREEN_HEIGHT },
-            duration: 400,
-          }).start(() => {
-            this.setState({ currentIndex: this.state.currentIndex + 1 });
-            this.state.pan.setValue({ x: 0, y: 0 });
-          });
-        } else {
-          Animated.parallel([
-            Animated.spring(this.state.pan, {
-              toValue: { x: 0, y: 0 },
-            }),
-            Animated.spring(this.state.swiped, {
-              toValue: { x: 0, y: -SCREEN_HEIGHT },
-            }),
-          ]).start();
-        }
-      },
-    });
+
   }
+
+  cardIndex = 0;
 
   componentDidMount() {
     this.getMemes();
@@ -234,17 +191,18 @@ export default class HomeScreen extends Component {
   }
 
   downloadImage() {
+    console.log(this.state.savedIndex)
     PermissionsAndroid.check(
       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
     ).then(response => {
       console.log('inMeme', response);
       if (response) {
-        let image_url = this.state.memeData[this.state.currentIndex].avatar;
+        let image_url = this.state.memeData[this.state.savedIndex].avatar;
         Download.start(image_url);
       } else {
         let check = Download.permission();
         if (check) {
-          let image_url = this.state.memeData[this.state.currentIndex].avatar;
+          let image_url = this.state.memeData[this.state.savedIndex].avatar;
           Download.start(image_url);
         } else {
           //do nothing
@@ -252,32 +210,6 @@ export default class HomeScreen extends Component {
       }
     });
   }
-
-  onShare = async () => {
-
-    try {
-      let url = this.state.memeData[this.state.currentIndex]
-        ? this.state.memeData[this.state.currentIndex].avatar
-        : '';
-      const result = await Share.share({
-        message:
-          'Check out Inmeme app. I found it best for watching current memes, indian memes and  jokes.\n\n' +
-          'https://play.google.com/store/apps/details?id=com.inmemes',
-      });
-
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
 
   convertToBase64(title, image) {
     console.log('convert base 64 called');
@@ -313,6 +245,8 @@ export default class HomeScreen extends Component {
 
   onShared(title) {
     console.log('share called');
+
+
     OnShare.share(title, this.state.base64Image);
   }
 
@@ -433,7 +367,7 @@ export default class HomeScreen extends Component {
       device_id: uniqueId,
       meme: this.state.memeData[this.state.currentIndex].id,
     };
-    
+
     fetch(
       `http://207.246.125.54/api/meme/${
       this.state.memeData[this.state.currentIndex].id
@@ -522,7 +456,12 @@ export default class HomeScreen extends Component {
   }
 
   setCurrentIndex(currentIndexNumber) {
-    if (currentIndexNumber >= 0) {
+    this.cardIndex = currentIndexNumber;
+    console.log("call here call here 22222 : ", currentIndexNumber, this.state.savedIndex, this.cardIndex)
+    this.setState({
+      savedIndex: currentIndexNumber + 1
+    })
+    if (currentIndexNumber === 0 || currentIndexNumber > 0) {
       if (this.state.memeData.length === currentIndexNumber + 1) {
         AsyncStorage.getItem('categoryId').then(response => {
           this.setState({
@@ -540,6 +479,7 @@ export default class HomeScreen extends Component {
           }
         });
       } else {
+
         this.setState({
           currentIndex: currentIndexNumber,
         });
@@ -588,9 +528,16 @@ export default class HomeScreen extends Component {
         swipeBackCard
         disableRightSwipe={true}
         disableLeftSwipe={true}
+        disableBottomSwipe={this.state.savedIndex === 0}
         //onSwipedTop={(cardIndex) => { this.setCurrentIndex(cardIndex) }}
         //onSwipedBottom={this.swipeCardBottom}
         goBackToPreviousCardOnSwipeBottom={true}
+        onSwipedBottom={cardIndex => {
+          console.log("call swiped back here : ", cardIndex)
+          this.setState({
+            savedIndex: cardIndex - 1
+          })
+        }}
         onSwiped={cardIndex => {
           this.setCurrentIndex(cardIndex);
         }}
@@ -600,19 +547,19 @@ export default class HomeScreen extends Component {
     );
   }
 
-  
 
-  setIsSwiping = (index, isSwipingBack) => {
-    if (this.state.memeData.length === index + 1) {
-      this.setState({
-        noMoreContent: true,
-      });
-    } else {
-      this.setState({
-        currentIndex: this.state.currentIndex - 1,
-      });
-    }
-  };
+
+  // setIsSwiping = (index, isSwipingBack) => {
+  //   if (this.state.memeData.length === index + 1) {
+  //     this.setState({
+  //       noMoreContent: true,
+  //     });
+  //   } else {
+  //     this.setState({
+  //       currentIndex: this.state.currentIndex - 1,
+  //     });
+  //   }
+  // };
 
   // swipeCard = (index) => {
 
@@ -631,13 +578,12 @@ export default class HomeScreen extends Component {
 
   // };
 
-  
+
 
   render() {
-
-    AdMobInterstitial.setAdUnitID('ca-app-pub-9423680607314008/6743597745');
+    AdMobInterstitial.setAdUnitID('ca-app-pub-5457194506992783/9648236336');
     //AdMobInterstitial.setAdUnitID('ca-app-pub-3940256099942544/1033173712');
-    AdMobInterstitial.requestAd().then(() => {(parseInt(this.state.currentIndex)%2)===0?AdMobInterstitial.showAd():null});
+    AdMobInterstitial.requestAd().then(() => { (parseInt(this.state.currentIndex) % 2) == 0 ? AdMobInterstitial.showAd() : null });
     return (
       <View style={{ flex: 1 }}>
         <Loader loading={this.state.loading} />
@@ -717,7 +663,7 @@ export default class HomeScreen extends Component {
               onPress={() =>
                 this.convertToBase64(
                   'meme',
-                  this.state.memeData[this.state.currentIndex].avatar,
+                  this.state.memeData[this.state.savedIndex].avatar,
                 )
               }>
               <Icon size={25} name={'share'} />
@@ -728,7 +674,7 @@ export default class HomeScreen extends Component {
         <AdMobBanner
           adSize="fullBanner"
           //adUnitID="ca-app-pub-3940256099942544/6300978111"
-          adUnitID="ca-app-pub-9423680607314008/6944233712"
+          adUnitID="ca-app-pub-5457194506992783/6702169485"
           onFailedToLoad={error => console.log('error in ads: ', error)}
         />
 
@@ -740,7 +686,7 @@ export default class HomeScreen extends Component {
           onAppEvent={event => console.log(event.name, event.info)}
         /> */}
 
-      
+
       </View>
     );
   }

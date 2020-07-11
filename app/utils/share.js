@@ -6,7 +6,7 @@ const OnShare = {
       title: 'Share via',
       message:
         'Check out Inmeme app. I found it best for watching current memes, indian memes and  jokes.\n\n' +
-        'https://play.google.com/store/apps/details?id=com.inmeme',
+        'https://play.google.com/store/apps/details?id=com.inmemes',
       url: 'data:image/png;base64' + url,
     };
     Share.open(shareOptions);
